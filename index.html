@@ -3,7 +3,7 @@
 	<head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-	<title>CSS3 + jQuery Search Form</title>
+	<title>WikiFastFacts</title>
 
 	<!-- CSS -->
 	<link rel="stylesheet" href="style.css" type="text/css" />
@@ -24,7 +24,8 @@
 	</head>
 
 	<body>
-    <h1 style="font-size:650%;">WikiFastFacts</h1>
+    <h1 style="font-size:650%; padding:0px; padding-top:3%; margin:0px;">WikiFastFacts</h1>
+    <h2 style="font-size:150%; padding:0px; margin:0px;" >Simple Wikipedia articles with ASL translations.</h2>
 		<div id="search-form" style="-ms-transform: scale(1.5, 1.5); -webkit-transform: scale(1.5, 1.5); transform: scale(1.5, 1.5); height: 10%">
 			<form class="form-container" action="" >
 				<input id="search-field" type="text" class="search-field" value="Type search text here..." />
@@ -38,8 +39,24 @@
 		</div>
 		<div id="result" style="width: 960px; margin: 0 auto; font-size: 30px;">
 		</div>
-		<div id="footer" style="margin-top: 10%;">
-			<a href="http://cats.gatech.edu/" target="blank"><img src="http://s1.cats.gatech.edu/sites/default/files/images/header_logo_new.gif" style="display: block; margin: auto; width: 100%;"></a>
+		<div id="img-result" style="width: 960px; margin: 0 auto; font-size: 30px;">
 		</div>
+		<div id="footer" style="margin-top: 10%;">
+			<a href="http://cats.gatech.edu/" target="blank"><img src="http://s1.cats.gatech.edu/sites/default/files/images/header_logo_new.gif" style="padding-bottom:10%; display: block; margin: auto; width: 100%;"></a>
+		</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h1 id=modal-title>Select a Video</h1>
+		<hr>
+		<div id="modal-list" class="video-container">
+		</div>
+  </div>
+
+</div>
 	</body>
 </html>
