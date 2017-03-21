@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html dir="ltr" lang="en-US">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<title>CSS3 + jQuery Search Form</title>
+
+	<!-- CSS -->
+	<link rel="stylesheet" href="style.css" type="text/css" />
+
+	<!-- Fonts -->
+	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,700italic,400,600,700' rel='stylesheet' type='text/css'>
+
+	<!-- jQuery -->
+	<script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
+
+	<!-- jQuery Easing -->
+	<script type="text/javascript" src="js/jquery.easing.1.3.js"></script>
+
+	<!-- Functions -->
+	<script type="text/javascript" src="js/functions.js"></script>
+	<script type="text/javascript" src="js/exposition.js"></script>
+
+	</head>
+
+	<body>
+    <h1 style="font-size:650%;">WikiFastFacts</h1>
+		<div id="search-form" style="-ms-transform: scale(1.5, 1.5); -webkit-transform: scale(1.5, 1.5); transform: scale(1.5, 1.5); height: 10%">
+			<form class="form-container" action="" >
+				<input id="search-field" type="text" class="search-field" value="Type search text here..." />
+				<div class="submit-container">
+					<input type="submit" value="" class="submit" onclick="extract($('#search-field').val())"/>
+				</div>
+			</form>
+			<div class="popup">
+				<p>What do you want to learn about?</p>
+			</div>
+		</div>
+		<div id="result" style="width: 960px; margin: 0 auto; font-size: 30px;">
+		</div>
+		<div id="footer" style="margin-top: 10%;">
+			<a href="http://cats.gatech.edu/" target="blank"><img src="http://s1.cats.gatech.edu/sites/default/files/images/header_logo_new.gif" style="display: block; margin: auto; width: 100%;"></a>
+		</div>
+	</body>
+</html>
