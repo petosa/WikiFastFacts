@@ -33,6 +33,8 @@ function signify(passage) {
     $("#result").html("");
     passage = replaceAll(passage, "<p>", "<p> ")
     passage = replaceAll(passage, "</p>", " <p>")
+    passage = replaceAll(passage, "<li>", "<li> ")
+    passage = replaceAll(passage, "</li>", " </li>")
     passage = replaceAll(passage, "<b>", "")
     passage = replaceAll(passage, "</b>", "")
     passage = replaceAll(passage, "<i>", "")
