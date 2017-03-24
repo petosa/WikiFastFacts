@@ -83,7 +83,7 @@ function modal(clean, data) {
   $("#modal-title").html(clean)
   obj.forEach(function(element) {
         console.log(element)
-        $("#modal-list").append("<iframe style='display:block;' src='http://www.youtube.com/embed/" + element.youtube + "?wmode=opaque?rel=0' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
+        $("#modal-list").append("<iframe style='display:block;' src='http://www.youtube.com/embed/" + element.youtube + "?rel=0' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
   });
 
 }
@@ -139,6 +139,8 @@ function extract(noun) {
                     "Wikiquote-logo-en",
                     "Ambox outdated content",
                     "Disambig gray",
+                    "WikiJunior logo-200px",
+                    "Sound-icon",
                   ]
 
                   post = true;
