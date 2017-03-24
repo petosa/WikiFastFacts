@@ -31,6 +31,14 @@ function sanitize(word) {
 
 function signify(passage) {
     $("#result").html("");
+    passage = replaceAll(passage, "<p>", "<p> ")
+    passage = replaceAll(passage, "</p>", " <p>")
+    passage = replaceAll(passage, "<b>", "")
+    passage = replaceAll(passage, "</b>", "")
+    passage = replaceAll(passage, "<i>", "")
+    passage = replaceAll(passage, "</i>", "")
+    passage = replaceAll(passage, "  ", " ")
+    console.log(passage)
     passage = passage.split(" ");
     str = ""
     total = passage.length;
@@ -74,8 +82,8 @@ function modal(clean, data) {
   $("#modal-list").html("")
   $("#modal-title").html(clean)
   obj.forEach(function(element) {
-    //$("#modal-list").append("<iframe width=\"952\" height=\"536\" src=\"https://www.youtube.com/embed/" + element.youtube + "\" frameborder=\"0\" allowfullscreen></iframe>");
-    $("#modal-list").append("<iframe src='http://www.youtube.com/embed/" + element.youtube + "' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
+        console.log(element)
+        $("#modal-list").append("<iframe style='display:block;' src='http://www.youtube.com/embed/" + element.youtube + "?wmode=opaque?rel=0' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
   });
 
 }
@@ -104,6 +112,7 @@ function extract(noun) {
           async: true
         }).then(function(imgs) {
             res2 = (imgs.query.pages[Object.keys(data.query.pages)[0]].images);
+            if(res2)
             res2.forEach(function(element) {
 
 
@@ -116,7 +125,31 @@ function extract(noun) {
                 try {
                   url = img.query.pages[Object.keys(img.query.pages)[0]].imageinfo[0].url;
                   insert = ("<img src='" + url + "' style='display: inline; margin: auto; width: 50%; image-rendering:crisp-edges'>")
-                  if (insert.indexOf(".svg") == -1 && insert.indexOf(".webm") == -1 && insert.indexOf(".ogv") == -1 && insert.indexOf(".ogg") == -1) {
+                  blacklist = [
+                    "Commons-logo",
+                    ".ogg",
+                    ".ogv",
+                    ".webm",
+                    "Increase2",
+                    "Ambox content",
+                    "Wiktionary-logo-en",
+                    "Wiki letter w",
+                    "Wikibooks-logo-en",
+                    "Wikinews-logo",
+                    "Wikiquote-logo-en",
+                    "Ambox outdated content",
+                    "Disambig gray",
+                  ]
+
+                  post = true;
+                  blacklist.forEach(function(elem) {
+                    if (element.title.indexOf(elem) != -1) {
+                      post = false
+                    }
+                  });
+
+                  if (post) {
+                    console.log(element.title);
                     $("#img-result").append(insert);
                   }
                 } catch(e){}
