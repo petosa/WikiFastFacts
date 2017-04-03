@@ -40,7 +40,6 @@ function signify(passage) {
     passage = replaceAll(passage, "<i>", "")
     passage = replaceAll(passage, "</i>", "")
     passage = replaceAll(passage, "  ", " ")
-    console.log(passage)
     passage = passage.split(" ");
     str = ""
     total = passage.length;
@@ -48,7 +47,6 @@ function signify(passage) {
 
     for(count = 0; count < total; count++){
         cleaned = sanitize(passage[count]);
-
 
         $.ajax({
           url: "https://dictionary-smartsign.rhcloud.com/videos?keywords=" + cleaned,
@@ -84,7 +82,6 @@ function modal(clean, data) {
   $("#modal-list").html("")
   $("#modal-title").html(clean)
   obj.forEach(function(element) {
-        console.log(element)
         $("#modal-list").append("<iframe style='display:block;' src='http://www.youtube.com/embed/" + element.youtube + "?rel=0' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
   });
 
@@ -92,6 +89,8 @@ function modal(clean, data) {
 
 function extract(noun) {
 
+    $("#myFrame").attr("style", "display:block");
+    $("#myFrame").attr("src", "https://commons.wikimedia.org/wiki/" + noun + "#Images");
     $("#img-result").html("");
     $.ajax({
       url: "https://simple.wikipedia.org/w/api.php?action=query&prop=extracts&redirects=1 &format=json&origin=*&exintro=&titles=" + noun,
@@ -100,8 +99,21 @@ function extract(noun) {
       async: true
     }).then(function(data) {
       res = (data.query.pages[Object.keys(data.query.pages)[0]].extract);
+      disambig = false
+      if (res) {
+        disambig = res.indexOf("more than one") != -1 ||
+        res.indexOf("may also refer to") != -1 ||
+        res.indexOf("mean:") != -1 ||
+        res.indexOf("meanings:") != -1
+      }
+      console.log(disambig)
       if (!res) {
         res = "No results found!"
+        $("#myFrame").attr("style", "display:none");
+        $("#result").html(res);
+      } else if (disambig) {
+        res = "Search one of the terms below.\n" + res;
+        $("#myFrame").attr("style", "display:none");
         $("#result").html(res);
       } else {
         signify(res);
@@ -153,8 +165,7 @@ function extract(noun) {
                   });
 
                   if (post) {
-                    console.log(element.title);
-                    $("#img-result").append(insert);
+                    //$("#img-result").append(insert);
                   }
                 } catch(e){}
               });
