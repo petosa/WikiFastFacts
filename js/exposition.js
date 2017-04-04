@@ -106,12 +106,30 @@ function extract(noun) {
         res.indexOf("mean:") != -1 ||
         res.indexOf("meanings:") != -1
       }
-      console.log(disambig)
       if (!res) {
-        res = "No results found!"
-        $("#myFrame").attr("style", "display:none");
-        $("#result").html(res);
-      } else if (disambig) {
+
+        $.ajax({
+          url: "https://simple.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + noun + "&origin=*&format=json",
+          method: 'GET',
+          dataType: 'json',
+          async: true
+        }).then(function(data) {
+          search_result = data.query.search;
+          if (search_result.length == 0) {
+            res = "No results found!"
+            $("#result").html(res);
+          } else {
+            res = "<i>Select one of the bolded terms below:</i><br><br>"
+            search_result.forEach(function(e) {
+              res += ("<span  style='cursor:pointer;color:#3366BB;'  onclick=\'extract(\"" + e.title + "\")\'><u><b>" + e.title + "</b></u></span> - " + e.snippet + "<br><br>")
+            });
+            $("#result").html(res);
+
+          }
+          $("#myFrame").attr("style", "display:none");
+        });
+
+      } else if (disambig){
         res = "Search one of the terms below.\n" + res;
         $("#myFrame").attr("style", "display:none");
         $("#result").html(res);
