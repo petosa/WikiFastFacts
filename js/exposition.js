@@ -87,6 +87,8 @@ function modal(clean, data) {
 
 }
 
+clickedLink = false;
+
 function extract(noun) {
 
     $("#myFrame").attr("style", "display:block");
@@ -106,8 +108,7 @@ function extract(noun) {
         res.indexOf("mean:") != -1 ||
         res.indexOf("meanings:") != -1
       }
-      if (!res) {
-
+      if (!res || (disambig && !clickedLink)) {
         $.ajax({
           url: "https://simple.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + noun + "&origin=*&format=json",
           method: 'GET',
@@ -121,7 +122,7 @@ function extract(noun) {
           } else {
             res = "<i>Select one of the bolded terms below:</i><br><br>"
             search_result.forEach(function(e) {
-              res += ("<span  style='cursor:pointer;color:#3366BB;'  onclick=\'extract(\"" + e.title + "\")\'><u><b>" + e.title + "</b></u></span> - " + e.snippet + "<br><br>")
+              res += ("<span  style='cursor:pointer;color:#3366BB;'  onclick=\'extract_link(\"" + e.title + "\")\'><u><b>" + e.title + "</b></u></span> - " + e.snippet + "<br><br>")
             });
             $("#result").html(res);
 
@@ -129,11 +130,13 @@ function extract(noun) {
           $("#myFrame").attr("style", "display:none");
         });
 
-      } else if (disambig){
+      } else if (disambig && clickedLink){
+        onSearchResult = false;
         res = "Search one of the terms below.\n" + res;
         $("#myFrame").attr("style", "display:none");
         $("#result").html(res);
       } else {
+        onSearchResult = false;
         signify(res);
 
 
@@ -194,7 +197,14 @@ function extract(noun) {
 
 
       }
+      clickedLink = false;
+
     });
 
 
+}
+
+function extract_link(noun) {
+  clickedLink = true;
+  extract(noun);
 }
