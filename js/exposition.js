@@ -60,7 +60,6 @@ function signify(passage) {
     for(count = 0; count < total; count++){
         cleaned = sanitize(passage[count]);
 
-
         $.ajax({
           url: "https://dictionary-smartsign.rhcloud.com/videos?keywords=" + cleaned,
           method: 'GET',
@@ -103,8 +102,12 @@ function modal(clean, data) {
 
 }
 
+clickedLink = false;
+
 function extract(noun) {
 
+    $("#myFrame").attr("style", "display:block");
+    $("#myFrame").attr("src", "https://commons.wikimedia.org/wiki/" + noun + "#Images");
     $("#img-result").html("");
     $.ajax({
       url: "https://simple.wikipedia.org/w/api.php?action=query&prop=extracts&redirects=1 &format=json&origin=*&exintro=&titles=" + noun,
@@ -113,10 +116,42 @@ function extract(noun) {
       async: true
     }).then(function(data) {
       res = (data.query.pages[Object.keys(data.query.pages)[0]].extract);
-      if (!res) {
-        res = "No results found!"
+      disambig = false
+      if (res) {
+        disambig = res.indexOf("more than one") != -1 ||
+        res.indexOf("may also refer to") != -1 ||
+        res.indexOf("mean:") != -1 ||
+        res.indexOf("meanings:") != -1
+      }
+      if (!res || (disambig && !clickedLink)) {
+        $.ajax({
+          url: "https://simple.wikipedia.org/w/api.php?action=query&list=search&srsearch=" + noun + "&origin=*&format=json",
+          method: 'GET',
+          dataType: 'json',
+          async: true
+        }).then(function(data) {
+          search_result = data.query.search;
+          if (search_result.length == 0) {
+            res = "No results found!"
+            $("#result").html(res);
+          } else {
+            res = "<i>Select one of the bolded terms below:</i><br><br>"
+            search_result.forEach(function(e) {
+              res += ("<span  style='cursor:pointer;color:#3366BB;'  onclick=\'extract_link(\"" + e.title + "\")\'><u><b>" + e.title + "</b></u></span> - " + e.snippet + "<br><br>")
+            });
+            $("#result").html(res);
+
+          }
+          $("#myFrame").attr("style", "display:none");
+        });
+
+      } else if (disambig && clickedLink){
+        onSearchResult = false;
+        res = "Search one of the terms below.\n" + res;
+        $("#myFrame").attr("style", "display:none");
         $("#result").html(res);
       } else {
+        onSearchResult = false;
         signify(res);
 
 
@@ -166,7 +201,7 @@ function extract(noun) {
                   });
 
                   if (post) {
-                    $("#img-result").append(insert);
+                    //$("#img-result").append(insert);
                   }
                 } catch(e){}
               });
@@ -177,7 +212,14 @@ function extract(noun) {
 
 
       }
+      clickedLink = false;
+
     });
 
 
+}
+
+function extract_link(noun) {
+  clickedLink = true;
+  extract(noun);
 }
