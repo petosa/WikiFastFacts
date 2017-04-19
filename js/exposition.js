@@ -29,6 +29,18 @@ function sanitize(word) {
     return word;
 }
 
+function getVideoOrder(vid) {
+  var keywords = vid.keywords,
+      orderKey, order = 999;
+  orderKey = keywords.filter(function(element) {
+      return element.match(/^\{\d+\}$/) !== null;
+  });
+  if (orderKey.length > 0) {
+      order = parseInt(orderKey[0].slice(1, -1), 10);
+  }
+  return order;
+}
+
 function signify(passage) {
     $("#result").html("");
     passage = replaceAll(passage, "<p>", "<p> ")
@@ -40,7 +52,6 @@ function signify(passage) {
     passage = replaceAll(passage, "<i>", "")
     passage = replaceAll(passage, "</i>", "")
     passage = replaceAll(passage, "  ", " ")
-    console.log(passage)
     passage = passage.split(" ");
     str = ""
     total = passage.length;
@@ -59,6 +70,7 @@ function signify(passage) {
           clean: cleaned,
           rank: count
         }).then(function(data) {
+          data.data.sort(function(a, b) {return getVideoOrder(a) - getVideoOrder(b);});
           res = [];
           data.data.forEach(function(element) {
               res.push({"title":element.title, "thumb":element.thumbnailStandard, "youtube":element.id});
@@ -77,6 +89,8 @@ function signify(passage) {
     }
 }
 
+
+
 function modal(clean, data) {
   obj = JSON.parse(replaceAll(data, "_DQUOTE_", "\""));
   var modal = document.getElementById('myModal');
@@ -84,7 +98,6 @@ function modal(clean, data) {
   $("#modal-list").html("")
   $("#modal-title").html(clean)
   obj.forEach(function(element) {
-        console.log(element)
         $("#modal-list").append("<iframe style='display:block;' src='http://www.youtube.com/embed/" + element.youtube + "?rel=0' width=\"800\" height=\"450\" frameborder=\"0\"></iframe>");
   });
 
@@ -153,7 +166,6 @@ function extract(noun) {
                   });
 
                   if (post) {
-                    console.log(element.title);
                     $("#img-result").append(insert);
                   }
                 } catch(e){}
